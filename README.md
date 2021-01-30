@@ -2,8 +2,9 @@
 
 This project create tables and fill the tables in a Postgres data base. The tables and data that create are in sql/ folder
 ## ER Diagram
-The ER Diagram of DB is this
-![ER Diagram](https://github.com/jdaarevalo/docker_postgres_with_data/images/ER_Diagram.png)
+The ER Diagram of DB is this:
+
+<img width="809" alt="ER_Diagram" src="https://user-images.githubusercontent.com/2475570/106355076-d4025700-62c3-11eb-90e6-41c3ee47c06b.png">
 
 ## ER Diagram
 Set the variables in `sql/fill_tables.sql`
