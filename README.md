@@ -12,11 +12,11 @@ Set the variables in `sql/fill_tables.sql`
 | ------ | ------ |
 | number_of_sales | Number of rows to create in the table sale |
 | number_of_users | Number of rows to create in the table users |
-| number_of_products | Number of rows to create in the table products |
-| number_of_stores | Number of rows to create in the table sale |
-| number_of_coutries | Number of rows to create in the table countries |
-| number_of_cities | Number of rows to create in the table cities |
-| number_of_status_names | Number of rows to create in the table status_names |
+| number_of_products | Number of rows to create in the table product |
+| number_of_stores | Number of rows to create in the table store |
+| number_of_coutries | Number of rows to create in the table country |
+| number_of_cities | Number of rows to create in the table city |
+| number_of_status_names | Number of rows to create in the table status_name |
 | start_date | Date of the first sale |
 | end_date | Date of the last sale |
 
