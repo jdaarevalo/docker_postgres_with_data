@@ -6,7 +6,7 @@ The ER Diagram of DB is this:
 
 <img width="809" alt="ER_Diagram" src="https://user-images.githubusercontent.com/2475570/106355076-d4025700-62c3-11eb-90e6-41c3ee47c06b.png">
 
-## ER Diagram
+## DB Variables
 Set the variables in `sql/fill_tables.sql`
 | Parameter | Description |
 | ------ | ------ |
