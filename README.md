@@ -28,7 +28,7 @@ If want change this params in `docker-compose.yaml`
 | ------ | ------ |
 | POSTGRES_USER | The Postgres user to connect **postgres** |
 | POSTGRES_PASSWORD | The Postgres password to connect **postgres** |
-| POSTGRES_DB | The Postgres password to connect **postgres** |
+| POSTGRES_DB | The Postgres database name to connect **postgres** |
 | port | The port mapped by Postgres is **5432** in your container. In this example, use the port **5438** on the host machine |
 
 ## Run
