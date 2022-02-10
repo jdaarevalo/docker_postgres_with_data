@@ -1,20 +1,89 @@
 version: '3.7'
+
+#####################################################
+# This Docker Compose file contains two services
+#    Dependency-Track API Server
+#    Dependency-Track FrontEnd
+#####################################################
+
+volumes:
+  dependency-track:
+  portainer:
+  pgvolume:
+  pgdata:
+networks:
+  dtrack:
 services:
-    postgres:
-        image: postgres:10.5
-        restart: always
-        environment: 
-          - POSTGRES_USER=postgres
-          - POSTGRES_PASSWORD=postgres
-        logging:
-          options:
-            max-size: 10m
-            max-file: "3"
-        ports:
-          - '5438:5432'
-        volumes:
-          - ./postgres-data:/var/lib/postgresql/data
-          # copy the sql script to create tables
-          - ./sql/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql
-          # copy the sql script to fill tables
-          - ./sql/fill_tables.sql:/docker-entrypoint-initdb.d/fill_tables.sql
+  portainer:
+    container_name: portainer_console_container
+    image: portainer/portainer-ce:2.6.0-alpine
+    ports:
+      - "9000:9000"
+      - "8000:8000"
+    volumes:
+      - portainer:/data portainer/portainer-ce
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - dtrack
+  postgres:
+    container_name: postgres_container
+    image: postgres:13.3-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      PGDATA: /var/lib/postgresql/data
+      TZ: Europe/Brussels
+    volumes:
+      - pgvolume:/var/lib/postgresql/data
+      - ./createDatabase.sql:/docker-entrypoint-initdb.d/createDatabase.sql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - dtrack
+  dtrack-apiserver:
+    image: dependencytrack/apiserver
+    environment:
+      - ALPINE_DATABASE_MODE=external
+      - ALPINE_DATABASE_URL=jdbc:postgresql://postgres:5432/dtrack
+      - ALPINE_DATABASE_DRIVER=org.postgresql.Driver
+      - ALPINE_DATABASE_USERNAME=dtrack
+      - ALPINE_DATABASE_PASSWORD=dtrack
+      - ALPINE_DATABASE_POOL_ENABLED=true
+      - ALPINE_DATABASE_POOL_MAX_SIZE=20
+      - ALPINE_DATABASE_POOL_MIN_IDLE=10
+      - ALPINE_DATABASE_POOL_IDLE_TIMEOUT=300000
+      - ALPINE_DATABASE_POOL_MAX_LIFETIME=600000
+    ports:
+      - '8081:8080'
+    volumes:
+      - 'dependency-track:/data'
+    restart: unless-stopped
+    networks:
+      - dtrack
+
+  dtrack-frontend:
+    image: dependencytrack/frontend
+    depends_on:
+      - dtrack-apiserver
+    environment:
+      # The base URL of the API server.
+      # NOTE:
+      #   * This URL must be reachable by the browsers of your users.
+      #   * The frontend container itself does NOT communicate with the API server directly, it just serves static files.
+      #   * When deploying to dedicated servers, please use the external IP or domain of the API server.
+      - API_BASE_URL=http://localhost:8081
+      # - "OIDC_ISSUER="
+      # - "OIDC_CLIENT_ID="
+      # - "OIDC_SCOPE="
+      # - "OIDC_FLOW="
+      # - "OIDC_LOGIN_BUTTON_TEXT="
+      # volumes:
+      # - "/host/path/to/config.json:/app/static/config.json"
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    networks:
+      - dtrack
