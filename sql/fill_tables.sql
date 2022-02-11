@@ -1,8 +1,8 @@
 -- Set params
-set session my.number_of_sales = '2000000';
-set session my.number_of_users = '500000';
-set session my.number_of_products = '300';
-set session my.number_of_stores = '500';
+set session my.number_of_sales = '100';
+set session my.number_of_users = '100';
+set session my.number_of_products = '100';
+set session my.number_of_stores = '100';
 set session my.number_of_coutries = '100';
 set session my.number_of_cities = '30';
 set session my.status_names = '5';
